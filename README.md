@@ -2,40 +2,6 @@
 
 A real-time webhook inspection and debugging platform that allows developers to create temporary webhook endpoints, receive HTTP requests, and visualize incoming payloads instantly in a modern dashboard.
 
-## Architecture
-
-```
-                          ┌──────────────────────┐
-                          │   External Services   │
-                          │  (send webhook POST)  │
-                          └──────────┬───────────┘
-                                     │ HTTP
-                                     ▼
-                          ┌──────────────────────┐
-                          │   Express Server     │
-                          │   /webhook/:id       │
-                          └──────┬───────────────┘
-                                 │ capture headers/body/query
-                                 ▼
-                          ┌──────────────────────┐
-                          │   Request Store      │
-                          │   (in-memory)        │
-                          └──────┬───────────────┘
-                                 │ broadcast via WebSocket
-                                 ▼
-                          ┌──────────────────────┐
-                          │   WebSocket Server   │
-                          │   /ws?sessionId=xxx  │
-                          └──────┬───────────────┘
-                                 │ real-time stream
-                                 ▼
-                          ┌──────────────────────┐
-                          │   React Dashboard    │
-                          │   (static/GitHub      │
-                          │    Pages)            │
-                          └──────────────────────┘
-```
-
 ## Features
 
 - **Webhook Generator**: Creates unique webhook endpoints at `/webhook/:id` with copyable URLs
