@@ -25,6 +25,7 @@ export function WebhookProvider({ children }) {
   const [sessionId] = useState(loadSession);
   const [requests, setRequests] = useState([]);
   const [selectedRequest, setSelectedRequest] = useState(null);
+  const [latestRequestId, setLatestRequestId] = useState(null);
   const [wsStatus, setWsStatus] = useState('disconnected');
   const [filterMethod, setFilterMethod] = useState('');
 
@@ -42,13 +43,15 @@ export function WebhookProvider({ children }) {
       if (next.length > 100) next.length = 100;
       return next;
     });
-    setSelectedRequest(request);
+    setSelectedRequest((prev) => prev ?? request);
+    setLatestRequestId(request.id);
     persistRequest(request);
   }, []);
 
   const clearRequests = useCallback(() => {
     setRequests([]);
     setSelectedRequest(null);
+    setLatestRequestId(null);
   }, []);
 
   const filteredRequests = filterMethod
@@ -66,6 +69,7 @@ export function WebhookProvider({ children }) {
         requests,
         filteredRequests,
         selectedRequest,
+        latestRequestId,
         wsStatus,
         filterMethod,
         webhookUrl,

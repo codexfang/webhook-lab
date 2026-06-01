@@ -3,9 +3,13 @@ import JsonViewer from './JsonViewer';
 import { useWebhook } from '../context/WebhookContext';
 
 export default function RequestDetail() {
-  const { selectedRequest } = useWebhook();
+  const { selectedRequest, requests, latestRequestId, setSelectedRequest } = useWebhook();
   const [activeTab, setActiveTab] = useState('body');
   const [copied, setCopied] = useState(false);
+
+  const newerCount = latestRequestId && selectedRequest?.id !== latestRequestId
+    ? requests.findIndex((r) => r.id === selectedRequest.id)
+    : 0;
 
   if (!selectedRequest) {
     return (
@@ -47,6 +51,15 @@ export default function RequestDetail() {
 
   return (
     <div className="flex-1 flex flex-col overflow-hidden">
+      {newerCount > 0 && (
+        <button
+          onClick={() => setSelectedRequest(requests[0])}
+          className="px-4 py-1.5 text-xs font-medium bg-accent-500/10 text-accent-400 border-b border-accent-500/20 hover:bg-accent-500/20 transition-colors text-left flex items-center gap-2"
+        >
+          <span>↑</span>
+          <span>{newerCount} newer request{newerCount > 1 ? 's' : ''}</span>
+        </button>
+      )}
       <div className="px-4 py-3 border-b border-surface-800 bg-surface-900">
         <div className="flex items-center gap-3 mb-2">
           <span className={`text-sm font-bold px-2 py-0.5 rounded border ${

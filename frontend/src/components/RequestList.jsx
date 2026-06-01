@@ -1,8 +1,18 @@
+import { useEffect, useRef } from 'react';
 import { useWebhook } from '../context/WebhookContext';
 import { METHOD_COLORS } from '../utils/constants';
 
 export default function RequestList() {
-  const { filteredRequests, selectedRequest, setSelectedRequest, filterMethod, setFilterMethod } = useWebhook();
+  const { filteredRequests, selectedRequest, setSelectedRequest, filterMethod, setFilterMethod, latestRequestId } = useWebhook();
+  const scrollRef = useRef(null);
+  const prevLen = useRef(filteredRequests.length);
+
+  useEffect(() => {
+    if (scrollRef.current && filteredRequests.length > prevLen.current) {
+      scrollRef.current.scrollTop = 0;
+    }
+    prevLen.current = filteredRequests.length;
+  }, [filteredRequests.length]);
 
   if (filteredRequests.length === 0) {
     return (
@@ -21,7 +31,7 @@ export default function RequestList() {
   }
 
   return (
-    <div className="flex-1 overflow-y-auto">
+    <div className="flex-1 overflow-y-auto" ref={scrollRef}>
       <div className="px-3 py-2 border-b border-surface-800 flex items-center gap-2">
         <span className="text-xs text-surface-500 uppercase tracking-wider">Requests</span>
         <span className="text-xs text-surface-600 bg-surface-800 px-1.5 py-0.5 rounded">{filteredRequests.length}</span>
@@ -47,7 +57,7 @@ export default function RequestList() {
           onClick={() => setSelectedRequest(req)}
           className={`w-full text-left px-4 py-3 border-b border-surface-800 hover:bg-surface-850 transition-colors ${
             selectedRequest?.id === req.id ? 'bg-surface-800 border-l-2 border-l-accent-500' : ''
-          }`}
+          } ${req.id === latestRequestId ? 'request-new' : ''}`}
         >
           <div className="flex items-center gap-2 mb-1">
             <span className={`text-xs font-bold px-1.5 py-0.5 rounded border ${METHOD_COLORS[req.method] || 'text-surface-400 border-surface-600'}`}>

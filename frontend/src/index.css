@@ -28,3 +28,12 @@
     text-wrap: balance;
   }
 }
+
+@keyframes request-new-flash {
+  0% { background-color: rgba(96, 165, 250, 0.12); }
+  100% { background-color: transparent; }
+}
+
+.request-new {
+  animation: request-new-flash 1.5s ease-out forwards;
+}
