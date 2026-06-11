@@ -23,6 +23,3 @@ A real-time webhook inspection and debugging platform that allows developers to 
 - **Storage**: IndexedDB / localStorage
 - **Deployment**: Render (backend), GitHub Pages (frontend)
 
-## License
-
-MIT
